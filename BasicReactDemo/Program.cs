@@ -1,8 +1,14 @@
+using BasicReactDemo.Model;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("mockdata.json");
 
 // Add services to the container.
+
+builder.Services.AddOptions();
+builder.Services.Configure<List<LabRecord>>(
+    builder.Configuration.GetSection("LabRecords"));
 
 builder.Services.AddControllersWithViews();
 
@@ -19,10 +25,14 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+    name: "LabRecords",
+    pattern: "{controller=LabRecords}/{action=Index}/{id?}");
+
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller}/{action=Index}/{id?}");
+
 
 app.MapFallbackToFile("index.html");
 

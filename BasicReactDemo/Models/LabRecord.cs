@@ -6,6 +6,6 @@
         //public string Category { get; set; }
         //public string Subcategory { get; set; }
 
-        public List<LabMeasurement> Measurements { get; set; } = new List<LabMeasurement>();
+        public List<LabMeasurement> LabMeasurements { get; set; } = new List<LabMeasurement>();
     }
 }

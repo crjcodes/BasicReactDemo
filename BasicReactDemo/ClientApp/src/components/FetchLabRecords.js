@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FilterableTable from 'react-filterable-table';
 
 export class FetchLabRecords extends Component {
     static displayName = FetchLabRecords.name;
@@ -12,42 +13,37 @@ export class FetchLabRecords extends Component {
         this.populateLabRecords();
     }
 
-    static renderLabRecordsTable(givenLabrecords) {
+    static renderFilterableTable(givenLabrecords) {
+        const fields = [
+            { name: 'name', displayName: "Name", inputFilterable: true, sortable: true },
+            { name: 'dateMeasured', displayName: "When Measured", inputFilterable: true, exactFilterable: true, sortable: true },
+            { name: 'value', displayName: "Value", inputFilterable: true, exactFilterable: true, sortable: true },
+        ];
         return (
-            <table className="table table-striped" aria-labelledby="tableLabel">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Name</th>
-                        <th>Measurement</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {givenLabrecords.map(lr =>                   
-                        lr.labMeasurements.map(lrm =>
-                            <tr>
-                                <td>{lrm.dateMeasured}</td>
-                                <td>{lr.name}</td>
-                                <td>{lrm.value}</td>
-                            </tr>
-                        )
-                    )}
-
-                </tbody>
-            </table>
+            <FilterableTable
+                namespace="LabRecords"
+                initialSort="name"
+                data={givenLabrecords}
+                fields={fields}
+                noRecordsMessage="No labwork to display"
+                noFilteredRecordsMessage="No labwork matches the current filter"
+            />
         );
     }
 
     render() {
-        let contents = this.state.loading
-            ? <p><em>Loading...</em></p>
-            : FetchLabRecords.renderLabRecordsTable(this.state.labrecords);
+        let contents = <p><em>Loading...</em></p>
+        let filteredTable = <p></p>;
+        if (!this.state.loading) {
+            //contents = FetchLabRecords.renderLabRecordsTable(this.state.labrecords);
+            filteredTable = FetchLabRecords.renderFilterableTable(this.state.labrecords);
+        }
 
         return (
           <div>
             <h1 id="tableLabel">Lab Records</h1>
             <p>This component demonstrates fetching data from configuration file.</p>
-            {contents}
+                {filteredTable}
           </div>
         );
     }

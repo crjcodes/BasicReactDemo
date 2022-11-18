@@ -9,9 +9,9 @@ namespace BasicReactDemo.Controllers
     [Route("[controller]")]
     public class LabRecordsController : Controller
     {
-        private readonly List<LabRecord> _records;
+        private readonly List<FlattenedLabRecord> _records;
 
-        public LabRecordsController(IOptions<List<LabRecord>> recordsOptions) 
+        public LabRecordsController(IOptions<List<FlattenedLabRecord>> recordsOptions) 
         { 
             _records = recordsOptions.Value;
 
@@ -19,15 +19,48 @@ namespace BasicReactDemo.Controllers
 
         // GET: LabRecordsController
         [HttpGet]
-        public IEnumerable<LabRecord> Index()
+        public IEnumerable<FlattenedLabRecord> Index()
         {
             return _records;
         }
 
-        // GET: LabRecordsController/Details/{name}
-        public LabRecord? Details(string name)
+        /// <summary>
+        /// Until I know React well enough to tell it a nested structure...
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
+        static public List<FlattenedLabRecord> Flatten(LabRecord? record) 
         {
-            return _records.Where(r => string.Equals(r.Name, name)).FirstOrDefault();
+            // Yes, LINQ would condense this nicely
+            // keeping expanded for debugging and development
+
+            var result = new List<FlattenedLabRecord>();
+
+            if (record == null)
+                return result;
+
+            foreach (var labMeasurement in record.LabMeasurements)
+            {
+                var flattened = new FlattenedLabRecord()
+                {
+                    Name = record.Name,
+                    DateMeasured = labMeasurement.DateMeasured,
+                    Value = labMeasurement.Value
+                };
+
+                result.Add(flattened);
+            }
+
+            return result; 
+        }
+
+        // GET: LabRecordsController/Details/{name}
+        public IEnumerable<FlattenedLabRecord> Details(string name)
+        {
+            var selected = _records
+                .Where(r => string.Equals(r.Name, name));
+
+            return selected;
         }
 
         // GET: LabRecordsController/Create

@@ -7,7 +7,7 @@ builder.Configuration.AddJsonFile("mockdata.json");
 // Add services to the container.
 
 builder.Services.AddOptions();
-builder.Services.Configure<List<LabRecord>>(
+builder.Services.Configure<List<FlattenedLabRecord>>(
     builder.Configuration.GetSection("LabRecords"));
 
 builder.Services.AddControllersWithViews();

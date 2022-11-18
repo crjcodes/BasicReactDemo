@@ -23,3 +23,5 @@ Using the default scaffolding of Visual Studio 2022 Community, plus mock data lo
 - [NEXT] Incorporate a React filterable table
 - [LATER] Represent data on a filterable graph
 
+# In Action
+![Simple Table](documentation/SimpleTableViaReact.png)

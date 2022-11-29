@@ -24,36 +24,6 @@ namespace BasicReactDemo.Controllers
             return _records;
         }
 
-        /// <summary>
-        /// Until I know React well enough to tell it a nested structure...
-        /// </summary>
-        /// <param name="record"></param>
-        /// <returns></returns>
-        static public List<FlattenedLabRecord> Flatten(LabRecord? record) 
-        {
-            // Yes, LINQ would condense this nicely
-            // keeping expanded for debugging and development
-
-            var result = new List<FlattenedLabRecord>();
-
-            if (record == null)
-                return result;
-
-            foreach (var labMeasurement in record.LabMeasurements)
-            {
-                var flattened = new FlattenedLabRecord()
-                {
-                    Name = record.Name,
-                    DateMeasured = labMeasurement.DateMeasured,
-                    Value = labMeasurement.Value
-                };
-
-                result.Add(flattened);
-            }
-
-            return result; 
-        }
-
         // GET: LabRecordsController/Details/{name}
         public IEnumerable<FlattenedLabRecord> Details(string name)
         {
@@ -62,6 +32,24 @@ namespace BasicReactDemo.Controllers
 
             return selected;
         }
+
+
+        // GET: LabRecordsController/Names
+        [HttpGet]
+        public IEnumerable<string> Names()
+        {
+            var selected = _records.Select(r => r.Name).Distinct();
+            return selected;
+        }
+
+        //// GET: LabRecordsController/Categories
+        //public IEnumerable<string> Categories()
+        //{
+        //    var selected = _records
+        //        .Where(r => string.Equals(r.Name, name));
+
+        //    return selected;
+        //}
 
         // GET: LabRecordsController/Create
         //public ActionResult Create()
